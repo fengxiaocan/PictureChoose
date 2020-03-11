@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity{
         PictureSelector.with(this).openImageGallery().singleMode().forResult(new OnResultCallbackListener(){
             @Override
             public void onResult(List<LocalMedia> result){
-                
+
             }
 
             @Override

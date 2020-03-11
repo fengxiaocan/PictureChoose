@@ -55,6 +55,26 @@ public final class PictureSelectionModel{
         return this;
     }
 
+    public PictureSelectionModel wechatTheme(){
+        selectionConfig.themeStyleId = R.style.picture_WeChat_style;
+        return this;
+    }
+
+    public PictureSelectionModel sinaTheme(){
+        selectionConfig.themeStyleId = R.style.picture_Sina_style;
+        return this;
+    }
+
+    public PictureSelectionModel whiteTheme(){
+        selectionConfig.themeStyleId = R.style.picture_white_style;
+        return this;
+    }
+
+    public PictureSelectionModel qqTheme(){
+        selectionConfig.themeStyleId = R.style.picture_QQ_style;
+        return this;
+    }
+
     /**
      * @return PictureSelectionModel
      */
