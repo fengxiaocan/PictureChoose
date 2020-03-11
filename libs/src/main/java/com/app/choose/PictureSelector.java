@@ -41,7 +41,15 @@ public final class PictureSelector{
      * @return LocalMedia PictureSelectionModel
      */
     public PictureSelectionModel openGallery(int chooseMode){
-        return new PictureSelectionModel(this,chooseMode);
+        return new PictureSelectionModel(context,chooseMode);
+    }
+
+    public PictureSelectionModel openImageGallery(){
+        return new PictureSelectionModel(context,PictureMimeType.ofImage());
+    }
+
+    public PictureSelectionModel openAllGallery(){
+        return new PictureSelectionModel(context,PictureMimeType.ofAll());
     }
 
     /**
@@ -49,7 +57,7 @@ public final class PictureSelector{
      * @return LocalMedia PictureSelectionModel
      */
     public PictureSelectionModel openCamera(int chooseMode){
-        return new PictureSelectionModel(this,chooseMode,true);
+        return new PictureSelectionModel(context,chooseMode,true);
     }
 
     /**
@@ -59,7 +67,7 @@ public final class PictureSelector{
      * @return
      */
     public PictureSelectionModel themeStyle(int themeStyle){
-        return new PictureSelectionModel(this,PictureMimeType.ofImage()).theme(themeStyle);
+        return new PictureSelectionModel(context,PictureMimeType.ofImage()).theme(themeStyle);
     }
 
     /**
@@ -69,7 +77,7 @@ public final class PictureSelector{
      * @return
      */
     public PictureSelectionModel setPictureStyle(PictureParameterStyle style){
-        return new PictureSelectionModel(this,PictureMimeType.ofImage()).setPictureStyle(style);
+        return new PictureSelectionModel(context,PictureMimeType.ofImage()).setPictureStyle(style);
     }
 
     /**
@@ -120,7 +128,7 @@ public final class PictureSelector{
      * @param position
      * @param medias
      */
-    public void externalPicturePreview(int position,List<LocalMedia> medias,int enterAnimation){
+    public static void externalPicturePreview(Context context,int position,List<LocalMedia> medias,int enterAnimation){
         if(! DoubleUtils.isFastDoubleClick()){
             Intent intent = new Intent(context,PictureExternalPreviewActivity.class);
             intent.putParcelableArrayListExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST,
@@ -141,7 +149,12 @@ public final class PictureSelector{
      * @param medias
      * @param directory_path
      */
-    public void externalPicturePreview(int position,String directory_path,List<LocalMedia> medias,int enterAnimation){
+    public static void externalPicturePreview(Context context,
+            int position,
+            String directory_path,
+            List<LocalMedia> medias,
+            int enterAnimation)
+    {
         if(! DoubleUtils.isFastDoubleClick()){
             Intent intent = new Intent(context,PictureExternalPreviewActivity.class);
             intent.putParcelableArrayListExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST,

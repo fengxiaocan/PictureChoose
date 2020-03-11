@@ -1,6 +1,7 @@
 package com.app.choose;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.ColorInt;
@@ -28,18 +29,18 @@ import com.luck.picture.lib.tools.DoubleUtils;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class PictureSelectionModel{
+public final class PictureSelectionModel{
     private PictureSelectionConfig selectionConfig;
-    private PictureSelector selector;
+    private Context context;
 
-    public PictureSelectionModel(PictureSelector selector,int chooseMode){
-        this.selector = selector;
+    public PictureSelectionModel(Context context,int chooseMode){
+        this.context = context;
         selectionConfig = PictureSelectionConfig.getCleanInstance();
         selectionConfig.chooseMode = chooseMode;
     }
 
-    public PictureSelectionModel(PictureSelector selector,int chooseMode,boolean camera){
-        this.selector = selector;
+    public PictureSelectionModel(Context context,int chooseMode,boolean camera){
+        this.context = context;
         selectionConfig = PictureSelectionConfig.getCleanInstance();
         selectionConfig.camera = camera;
         selectionConfig.chooseMode = chooseMode;
@@ -94,6 +95,26 @@ public class PictureSelectionModel{
      */
     public PictureSelectionModel selectionMode(int selectionMode){
         selectionConfig.selectionMode = selectionMode;
+        return this;
+    }
+
+    /**
+     * 多选模式
+     *
+     * @return
+     */
+    public PictureSelectionModel multipleMode(){
+        selectionConfig.selectionMode = PictureConfig.MULTIPLE;
+        return this;
+    }
+
+    /**
+     * 单选模式
+     *
+     * @return
+     */
+    public PictureSelectionModel singleMode(){
+        selectionConfig.selectionMode = PictureConfig.SINGLE;
         return this;
     }
 
@@ -923,7 +944,7 @@ public class PictureSelectionModel{
      */
     public void forResult(OnResultCallbackListener listener){
         if(! DoubleUtils.isFastDoubleClick()){
-            if(selector.context == null || selectionConfig == null){
+            if(context == null || selectionConfig == null){
                 return;
             }
             // 绑定回调监听
@@ -931,18 +952,18 @@ public class PictureSelectionModel{
 
             Intent intent;
             if(selectionConfig.camera && selectionConfig.isUseCustomCamera){
-                intent = new Intent(selector.context,PictureCustomCameraActivity.class);
+                intent = new Intent(context,PictureCustomCameraActivity.class);
             } else{
-                intent = new Intent(selector.context,
+                intent = new Intent(context,
                         selectionConfig.camera ? PictureSelectorCameraEmptyActivity.class :
                                 selectionConfig.isWeChatStyle ? PictureSelectorWeChatStyleActivity.class :
                                         PictureSelectorActivity.class);
             }
-            selector.context.startActivity(intent);
+            context.startActivity(intent);
 
             PictureWindowAnimationStyle windowAnimationStyle = selectionConfig.windowAnimationStyle;
-            if(selector.context instanceof Activity){
-                ((Activity)selector.context).overridePendingTransition(
+            if(context instanceof Activity){
+                ((Activity)context).overridePendingTransition(
                         windowAnimationStyle != null && windowAnimationStyle.activityEnterAnimation != 0 ?
                                 windowAnimationStyle.activityEnterAnimation : R.anim.picture_anim_enter,
                         R.anim.picture_anim_fade_in);
@@ -958,15 +979,12 @@ public class PictureSelectionModel{
      * @param medias
      */
     public void openExternalPreview(int position,List<LocalMedia> medias){
-        if(selector != null){
-            selector.externalPicturePreview(position,
-                    medias,
-                    selectionConfig.windowAnimationStyle != null &&
-                    selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
-                            selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
-        } else{
-            throw new NullPointerException("This PictureSelector is Null");
-        }
+        PictureSelector.externalPicturePreview(context,
+                position,
+                medias,
+                selectionConfig.windowAnimationStyle != null &&
+                selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
+                        selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
     }
 
 
@@ -979,28 +997,13 @@ public class PictureSelectionModel{
      */
     @Deprecated
     public void openExternalPreview(int position,String directory_path,List<LocalMedia> medias){
-        if(selector != null){
-            selector.externalPicturePreview(position,
-                    directory_path,
-                    medias,
-                    selectionConfig.windowAnimationStyle != null &&
-                    selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
-                            selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
-        } else{
-            throw new NullPointerException("This PictureSelector is Null");
-        }
+        PictureSelector.externalPicturePreview(context,
+                position,
+                directory_path,
+                medias,
+                selectionConfig.windowAnimationStyle != null &&
+                selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
+                        selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
     }
 
-    /**
-     * set preview video
-     *
-     * @param path
-     */
-    public void externalPictureVideo(String path){
-        if(selector != null){
-            selector.externalPictureVideo(path);
-        } else{
-            throw new NullPointerException("This PictureSelector is Null");
-        }
-    }
 }
