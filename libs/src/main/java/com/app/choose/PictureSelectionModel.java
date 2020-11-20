@@ -636,20 +636,6 @@ public final class PictureSelectionModel{
     }
 
     /**
-     * # Responding to the Q version of Android, it's all in the app
-     * sandbox so customizations are no longer provided
-     *
-     * @param outputCameraPath Camera save path   由于Android Q的原因 其实此方法作用的意义就没了
-     * @return
-     */
-    @Deprecated
-    public PictureSelectionModel setOutputCameraPath(String outputCameraPath){
-        selectionConfig.outputCameraPath = outputCameraPath;
-        return this;
-    }
-
-
-    /**
      * # file size The unit is M
      *
      * @param fileSize Filter file size
