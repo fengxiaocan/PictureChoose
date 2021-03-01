@@ -979,12 +979,16 @@ public final class PictureSelectionModel{
             }
             context.startActivity(intent);
 
-            PictureWindowAnimationStyle windowAnimationStyle = PictureSelectionConfig.windowAnimationStyle;
-            if(context instanceof Activity){
-                ((Activity)context).overridePendingTransition(
-                        windowAnimationStyle != null && windowAnimationStyle.activityEnterAnimation != 0 ?
-                                windowAnimationStyle.activityEnterAnimation : R.anim.picture_anim_enter,
-                        R.anim.picture_anim_fade_in);
+            try {
+                PictureWindowAnimationStyle windowAnimationStyle = PictureSelectionConfig.windowAnimationStyle;
+                if(context instanceof Activity){
+                    ((Activity)context).overridePendingTransition(
+                            windowAnimationStyle != null && windowAnimationStyle.activityEnterAnimation != 0 ?
+                                    windowAnimationStyle.activityEnterAnimation : R.anim.picture_anim_enter,
+                            R.anim.picture_anim_fade_in);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
