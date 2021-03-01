@@ -103,8 +103,8 @@ public final class PictureSelectionModel{
      * @return
      */
     public PictureSelectionModel loadImageEngine(ImageEngine engine){
-        if(selectionConfig.imageEngine != engine){
-            selectionConfig.imageEngine = engine;
+        if (PictureSelectionConfig.imageEngine != engine) {
+            PictureSelectionConfig.imageEngine = engine;
         }
         return this;
     }
@@ -161,7 +161,7 @@ public final class PictureSelectionModel{
      * @return
      */
     public PictureSelectionModel bindCustomPlayVideoCallback(OnVideoSelectedPlayCallback callback){
-        selectionConfig.customVideoPlayCallback = new WeakReference<>(callback).get();
+        PictureSelectionConfig.customVideoPlayCallback = new WeakReference<>(callback).get();
         return this;
     }
 
@@ -318,10 +318,9 @@ public final class PictureSelectionModel{
      * @param isWithVideoImage Whether the pictures and videos can be selected together
      * @return
      */
-    public PictureSelectionModel isWithVideoImage(boolean isWithVideoImage){
-        selectionConfig.isWithVideoImage = selectionConfig.selectionMode == PictureConfig.SINGLE ||
-                                           selectionConfig.chooseMode != PictureMimeType.ofAll() ? false :
-                isWithVideoImage;
+    public PictureSelectionModel isWithVideoImage(boolean isWithVideoImage) {
+        selectionConfig.isWithVideoImage = selectionConfig.selectionMode != PictureConfig.SINGLE &&
+                selectionConfig.chooseMode == PictureMimeType.ofAll() && isWithVideoImage;
         return this;
     }
 
@@ -367,10 +366,9 @@ public final class PictureSelectionModel{
      */
     public PictureSelectionModel isSingleDirectReturn(boolean isSingleDirectReturn){
         selectionConfig.isSingleDirectReturn =
-                selectionConfig.selectionMode == PictureConfig.SINGLE ? isSingleDirectReturn : false;
+                selectionConfig.selectionMode == PictureConfig.SINGLE && isSingleDirectReturn;
         selectionConfig.isOriginalControl =
-                selectionConfig.selectionMode == PictureConfig.SINGLE && isSingleDirectReturn ? false :
-                        selectionConfig.isOriginalControl;
+                (selectionConfig.selectionMode != PictureConfig.SINGLE || !isSingleDirectReturn) && selectionConfig.isOriginalControl;
         return this;
     }
 
@@ -558,8 +556,8 @@ public final class PictureSelectionModel{
      */
     public PictureSelectionModel isOriginalImageControl(boolean isOriginalControl){
         selectionConfig.isOriginalControl =
-                selectionConfig.camera || selectionConfig.chooseMode == PictureMimeType.ofVideo() ||
-                selectionConfig.chooseMode == PictureMimeType.ofAudio() ? false : isOriginalControl;
+                !selectionConfig.camera && selectionConfig.chooseMode != PictureMimeType.ofVideo() &&
+                        selectionConfig.chooseMode != PictureMimeType.ofAudio() && isOriginalControl;
         return this;
     }
 
@@ -639,12 +637,12 @@ public final class PictureSelectionModel{
      * # Responding to the Q version of Android, it's all in the app
      * sandbox so customizations are no longer provided
      *
-     * @param outputCameraPath Camera save path   由于Android Q的原因 其实此方法作用的意义就没了
+     * @param outPutCameraPath Camera save path   由于Android Q的原因 其实此方法作用的意义就没了
      * @return
      */
     @Deprecated
-    public PictureSelectionModel setOutputCameraPath(String outputCameraPath){
-        selectionConfig.outputCameraPath = outputCameraPath;
+    public PictureSelectionModel setOutPutCameraPath(String outPutCameraPath) {
+        selectionConfig.outPutCameraPath = outPutCameraPath;
         return this;
     }
 
@@ -886,7 +884,7 @@ public final class PictureSelectionModel{
      * @return
      */
     public PictureSelectionModel setPictureCropStyle(PictureCropParameterStyle style){
-        selectionConfig.cropStyle = style;
+        PictureSelectionConfig.cropStyle = style;
         return this;
     }
 
@@ -897,7 +895,7 @@ public final class PictureSelectionModel{
      * @return
      */
     public PictureSelectionModel setPictureStyle(PictureParameterStyle style){
-        selectionConfig.style = style;
+        PictureSelectionConfig.style = style;
         return this;
     }
 
@@ -907,7 +905,7 @@ public final class PictureSelectionModel{
      * @return
      */
     public PictureSelectionModel setPictureWindowAnimationStyle(PictureWindowAnimationStyle windowAnimationStyle){
-        selectionConfig.windowAnimationStyle = windowAnimationStyle;
+        PictureSelectionConfig.windowAnimationStyle = windowAnimationStyle;
         return this;
     }
 
@@ -968,7 +966,7 @@ public final class PictureSelectionModel{
                 return;
             }
             // 绑定回调监听
-            selectionConfig.listener = new WeakReference<>(listener).get();
+            PictureSelectionConfig.listener = listener;
 
             Intent intent;
             if(selectionConfig.camera && selectionConfig.isUseCustomCamera){
@@ -981,7 +979,7 @@ public final class PictureSelectionModel{
             }
             context.startActivity(intent);
 
-            PictureWindowAnimationStyle windowAnimationStyle = selectionConfig.windowAnimationStyle;
+            PictureWindowAnimationStyle windowAnimationStyle = PictureSelectionConfig.windowAnimationStyle;
             if(context instanceof Activity){
                 ((Activity)context).overridePendingTransition(
                         windowAnimationStyle != null && windowAnimationStyle.activityEnterAnimation != 0 ?
@@ -1002,9 +1000,9 @@ public final class PictureSelectionModel{
         PictureSelector.externalPicturePreview(context,
                 position,
                 medias,
-                selectionConfig.windowAnimationStyle != null &&
-                selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
-                        selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
+                PictureSelectionConfig.windowAnimationStyle != null &&
+                        PictureSelectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
+                        PictureSelectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
     }
 
 
@@ -1021,9 +1019,9 @@ public final class PictureSelectionModel{
                 position,
                 directory_path,
                 medias,
-                selectionConfig.windowAnimationStyle != null &&
-                selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
-                        selectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
+                PictureSelectionConfig.windowAnimationStyle != null &&
+                        PictureSelectionConfig.windowAnimationStyle.activityPreviewEnterAnimation != 0 ?
+                        PictureSelectionConfig.windowAnimationStyle.activityPreviewEnterAnimation : 0);
     }
 
 }
